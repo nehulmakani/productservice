@@ -16,7 +16,7 @@ public class Product extends BaseModel {
     // => L to R: 1 : 1
     // => R to L: m : 1
     // => Ans:    m : 1
-    @ManyToOne(cascade = {CascadeType.PERSIST})
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "category")
     private Category category;
 

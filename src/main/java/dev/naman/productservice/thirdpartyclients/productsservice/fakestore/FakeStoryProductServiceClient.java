@@ -50,7 +50,7 @@ public class FakeStoryProductServiceClient {
         return response.getBody();
     }
 
-    public FakeStoreProductDto getProductById(Long id) throws NotFoundException {
+    public FakeStoreProductDto getProductById(Long id){
 //        FakeStoreProductService fakeStoreProductService = new FakeStoreProductService();
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> response =
@@ -59,7 +59,8 @@ public class FakeStoryProductServiceClient {
         FakeStoreProductDto fakeStoreProductDto = response.getBody();
 
         if (fakeStoreProductDto == null) {
-            throw new NotFoundException("Product with id: " + id + " doesn't exist.");
+//            throw new NotFoundException("Product with id: " + id + " doesn't exist.");
+            return null;
         }
 
 //        response.getStatusCode()

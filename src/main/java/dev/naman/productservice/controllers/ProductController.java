@@ -24,7 +24,7 @@ public class ProductController {
 
     // constructor injection
 //    @Autowired
-    public ProductController(ProductService productService) {
+    public ProductController(@Qualifier("selfProductServiceImpl") ProductService productService) {
         this.productService = productService;
     }
 //
@@ -37,33 +37,72 @@ public class ProductController {
 
     // GET /products {}
     @GetMapping
-    public List<GenericProductDto> getAllProducts() {
-        return productService.getAllProducts();
+    public ResponseEntity<List<GenericProductDto>> getAllProducts() {
+        return  new ResponseEntity<>(
+                productService.getAllProducts(), HttpStatus.OK);
     }
 
     // localhost:8080/products/{id}
     // localhost:8080/products/123
-    @GetMapping("{id}")
-    public GenericProductDto getProductById(@PathVariable("id") Long id) throws NotFoundException {
-        return productService.getProductById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<GenericProductDto> getProductById(@PathVariable("id") Long id) {
+        GenericProductDto product = productService.getProductById(id);
+        if(product==null){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<GenericProductDto> deleteProductById(@PathVariable("id") Long id) {
+        GenericProductDto deletedProduct = productService.deleteProduct(id);
+        if(deletedProduct==null){
+            return new ResponseEntity<>(
+                    null,
+                    HttpStatus.NOT_FOUND
+            );
+        }
         return new ResponseEntity<>(
-                productService.deleteProduct(id),
+                deletedProduct,
+                HttpStatus.FOUND
+        );
+    }
+
+//    @PostMapping
+//    public GenericProductDto createProduct(@RequestBody GenericProductDto product) {
+////        System.out.println(product.name);
+//        return productService.createProduct(product);
+//    }
+    @PostMapping
+    public ResponseEntity<GenericProductDto> addProduct(@RequestBody GenericProductDto product){
+        return new ResponseEntity<>(productService.addProduct(product), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
+    public ResponseEntity<GenericProductDto> updateProductById(@PathVariable Long id,
+                                                               @RequestBody GenericProductDto productDto) {
+        GenericProductDto updatedProduct = productService.updateProduct(id, productDto);
+        if(updatedProduct==null){
+            return new ResponseEntity<>(
+                    null,
+                    HttpStatus.NOT_FOUND
+            );
+        }
+        return new ResponseEntity<>(
+                updatedProduct,
                 HttpStatus.OK
         );
     }
 
-    @PostMapping
-    public GenericProductDto createProduct(@RequestBody GenericProductDto product) {
-//        System.out.println(product.name);
-        return productService.createProduct(product);
+    @GetMapping("/categories")
+    public ResponseEntity<List<String>> getAllCategories(){
+        return new ResponseEntity<>(productService.getAllCategories(), HttpStatus.OK);
     }
 
-    @PutMapping("{id}")
-    public void updateProductById() {
-
+    @GetMapping("/category/{category}")
+    public ResponseEntity<List<GenericProductDto>> getAllProductInCategory(@PathVariable String category){
+        List<GenericProductDto> prodList = productService.getProductsByCategory(category);
+        return new ResponseEntity<>(prodList, HttpStatus.OK);
     }
 }

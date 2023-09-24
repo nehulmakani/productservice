@@ -36,13 +36,13 @@ public class FakeStoreProductService implements ProductService {
     }
 
 
-    @Override
-    public GenericProductDto createProduct(GenericProductDto product) {
-        return convertFakeStoreProductIntoGenericProduct(fakeStoryProductServiceClient.createProduct(product));
-    }
+//    @Override
+//    public GenericProductDto createProduct(GenericProductDto product) {
+//        return convertFakeStoreProductIntoGenericProduct(fakeStoryProductServiceClient.createProduct(product));
+//    }
 
     @Override
-    public GenericProductDto getProductById(Long id) throws NotFoundException {
+    public GenericProductDto getProductById(Long id){
         return convertFakeStoreProductIntoGenericProduct(fakeStoryProductServiceClient.getProductById(id));
     }
 
@@ -59,5 +59,25 @@ public class FakeStoreProductService implements ProductService {
     @Override
     public GenericProductDto deleteProduct(Long id) {
         return convertFakeStoreProductIntoGenericProduct(fakeStoryProductServiceClient.deleteProduct(id));
+    }
+
+    @Override
+    public List<String> getAllCategories() {
+        return null;
+    }
+
+    @Override
+    public List<GenericProductDto> getProductsByCategory(String catetegory) {
+        return null;
+    }
+
+    @Override
+    public GenericProductDto addProduct(GenericProductDto genericProductDto) {
+        return null;
+    }
+
+    @Override
+    public GenericProductDto updateProduct(Long id, GenericProductDto genericProductDto) {
+        return null;
     }
 }
